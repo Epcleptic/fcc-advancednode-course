@@ -9,6 +9,8 @@ const app = express();
 const session = require("express-session");
 const passport = require("passport");
 
+const { ObjectID } = require("mongodb");
+
 fccTesting(app); //For FCC testing purposes
 app.use("/public", express.static(process.cwd() + "/public"));
 app.use(express.json());
@@ -23,6 +25,16 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  done(null, user._id);
+});
+
+passport.deserializeUser((id, done) => {
+  myDB.findOne({ _id: new ObjectID(id) }, (err, doc) => {
+    done(null, null);
+  });
+});
 
 app.route("/").get((req, res) => {
   res.render("index", { title: "Hello", message: "Please log in" });
