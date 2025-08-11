@@ -32,7 +32,24 @@ myDB(async (client) => {
   const myDataBase = await client.db("database").collection("users");
 
   app.route("/").get((req, res) => {
-    res.render("index", { title: "Hello", message: "Please log in" });
+    res.render("index", {
+      title: "Hello",
+      message: "Please log in",
+      showLogin: true,
+    });
+  });
+
+  app
+    .route("/login")
+    .post(
+      passport.authenticate("local", { failureRedirect: "/" }),
+      (req, res) => {
+        res.redirect("/profile");
+      }
+    );
+
+  app.route("/profile").get((req, res) => {
+    res.render("profile");
   });
 
   passport.serializeUser((user, done) => {
