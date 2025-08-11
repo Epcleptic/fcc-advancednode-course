@@ -48,6 +48,11 @@ myDB(async (client) => {
       }
     );
 
+  app.route("/logout").get((req, res) => {
+    req.logout();
+    res.redirect("/");
+  });
+
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
@@ -57,6 +62,10 @@ myDB(async (client) => {
 
   app.route("/profile").get(ensureAuthenticated, (req, res) => {
     res.render("profile");
+  });
+
+  app.use((req, res, next) => {
+    res.status(404).type("text").send("Not Found");
   });
 
   passport.serializeUser((user, done) => {
