@@ -36,6 +36,7 @@ myDB(async (client) => {
       title: "Hello",
       message: "Please log in",
       showLogin: true,
+      showRegistration: true,
     });
   });
 
@@ -44,7 +45,7 @@ myDB(async (client) => {
     .post(
       passport.authenticate("local", { failureRedirect: "/" }),
       (req, res) => {
-        res.redirect("/profile", { username: req.user.username });
+        res.redirect("/profile");
       }
     );
 
@@ -61,7 +62,7 @@ myDB(async (client) => {
   }
 
   app.route("/profile").get(ensureAuthenticated, (req, res) => {
-    res.render("profile");
+    res.render("profile", { username: req.user.username });
   });
 
   app.use((req, res, next) => {
